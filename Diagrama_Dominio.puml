@@ -7,18 +7,15 @@ class SolicitudCompartir
 class SistemaUsuarios 
 
 ' Usuario tiene muchos contactos
-Usuario "1" -- "1..*" Contacto : posee >
+Usuario "1" --> "*" Contacto : posee 
 
 ' Solicitudes enviadas por un usuario
-Usuario "1" -- "0..*" SolicitudCompartir : envia >
+Usuario "1" --> "*" SolicitudCompartir : envia 
 
 ' Solicitudes recibidas por un usuario
-Usuario "1" -- "0..*" SolicitudCompartir : recibe <
-
-SolicitudCompartir "1" --> "1" Usuario : solicitante
-SolicitudCompartir "1" --> "1" Usuario : destinatario
+Usuario "1" <-- "*" SolicitudCompartir : recibe 
 
 ' SistemaUsuarios administra a varios usuarios
-SistemaUsuarios "1" -- "0..*" Usuario : contiene >
+SistemaUsuarios "1" --> "*" Usuario : contiene 
 
 @enduml
