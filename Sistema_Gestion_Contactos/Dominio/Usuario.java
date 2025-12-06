@@ -11,10 +11,10 @@ public class Usuario implements Serializable {
     private String passwordHash;
     private String email;
 //Constructores
-    public Usuario(String nombreCompleto, String nombreUsuario, String passwordPlano, String email) {
+    public Usuario(String nombreCompleto, String nombreUsuario, String passwordIngresada, String email) {
         this.nombreCompleto = nombreCompleto;
         this.nombreUsuario = nombreUsuario;
-        this.passwordHash = UtileriaSeguridad.generarHash(passwordPlano);
+        this.passwordHash = UtileriaSeguridad.generarHash(passwordIngresada);
         this.email = email;
     }
 // Constructor auxiliar
@@ -54,6 +54,7 @@ public class Usuario implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
+
 
 
 
