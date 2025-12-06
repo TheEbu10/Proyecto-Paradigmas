@@ -15,7 +15,7 @@ public class Usuario implements Serializable {
         this.nombreUsuario = nombreUsuario;
         this.passwordHash = passwordHash;
         this.email = email;
-
+    }
     public String getNombreUsuario() {
         return nombreUsuario;
     }
@@ -24,16 +24,16 @@ public class Usuario implements Serializable {
         return nombreCompleto;
     }
 
-    public String getpasswordhash() {
+    public String getPasswordhash() {
         return passwordHash;
     }
 
-    public String getemail() {
+    public String getEmail() {
         return email;
     }
     
     public boolean validarpassword(String passwordIngresada) {
-        return UtilieriaSeguridad.validarhash(passwordIngresada, this.passwordhash);
+        return UtilieriaSeguridad.validarHash(passwordIngresada, this.passwordHash);
     }
 
     @Override
@@ -44,6 +44,7 @@ public class Usuario implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
+
 
 
 
