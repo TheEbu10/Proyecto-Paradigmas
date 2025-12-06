@@ -2,10 +2,9 @@ package Dominio;
 
 import Persistencia.UtileriaSeguridad;
 import java.io.Serializable;
-
 public class Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     private String nombreCompleto;
     private String nombreUsuario;
     private String passwordHash;
@@ -33,3 +32,17 @@ public class Usuario implements Serializable {
         return email;
     }
 
+
+
+    public boolean validarpassword(String passwordIngresada) {
+        return UtilieriaSeguridad.validarhash(passwordIngresada, this.passwordhash);
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "nombreCompleto='" + nombreCompleto + '\'' +
+                ", nombreUsuario='" + nombreUsuario + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
