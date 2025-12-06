@@ -30,7 +30,7 @@ public class SolicitudCompartir { // Clase para representar una solicitud de com
         return String.format("%04d", numero);       
     }
 
-    public SolicitudCompartir(String nombreSolicitante, String nombreDestinatario) { // Constructor de  la solicitud 
+    public SolicitudCompartir(String nombreSolicitante, String nombreDestinatario) { // Constructor de la solicitud 
         this.idSolicitud = generarIdCorta();
         this.nombreSolicitante = nombreSolicitante;
         this.nombreDestinatario = nombreDestinatario;
@@ -38,11 +38,21 @@ public class SolicitudCompartir { // Clase para representar una solicitud de com
         this.estado = EstadoSolicitud.PENDIENTE;
     }
 
-    public String getIdSolicitud() { return idSolicitud; }
-    public String getNombreSolicitante() { return nombreSolicitante; }
-    public String getNombreDestinatario() { return nombreDestinatario; }
-    public Date getFechaSolicitud() { return fechaSolicitud; }
-    public EstadoSolicitud getEstado() { return estado; }
+    public String getIdSolicitud() { 
+        return idSolicitud; 
+    }
+    public String getNombreSolicitante() { 
+        return nombreSolicitante;
+    }
+    public String getNombreDestinatario() { 
+        return nombreDestinatario;
+        }
+    public Date getFechaSolicitud() { 
+        return fechaSolicitud;
+    }
+    public EstadoSolicitud getEstado() { 
+        return estado; 
+        }
 
     public void setEstado(EstadoSolicitud nuevoEstado) {
         this.estado = nuevoEstado;
