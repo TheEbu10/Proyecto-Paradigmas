@@ -53,8 +53,8 @@ package persistencia {
         + derivarLlave(password, sal) : byte[]
     }
 
-    RepositorioUsuarios ..> UtileriaSeguridad : <<usa>>
-    RepositorioContactos ..> CifradorAES : <<usa>>
+    RepositorioUsuarios ..> UtileriaSeguridad 
+    RepositorioContactos ..> CifradorAES
 }
 
 package presentacion {
@@ -72,16 +72,12 @@ Usuario "1" -- "*" Contacto : lista
 Usuario "1" --> "*" SolicitudCompartir : emisor
 Usuario "1" --> "*" SolicitudCompartir : receptor
 
-' Dependencias de Servicios/Repositorios (Implícitas)
-' InterfazUsuarioCLI usa los servicios (no se definen explícitamente aquí, pero se implica la interacción)
-' Servicios usan repositorios
-
 ' Relaciones de Implementación y Asociación
-RepositorioUsuarios ..> Usuario : <<persiste>>
-RepositorioContactos ..> Contacto : <<persiste>>
-RepositorioContactos ..> SolicitudCompartir : <<persiste>>
+RepositorioUsuarios ..> Usuario
+RepositorioContactos ..> Contacto
+RepositorioContactos ..> SolicitudCompartir
 
-CifradorAES <.. RepositorioContactos : <<usa>>
-UtileriaSeguridad <.. RepositorioUsuarios : <<usa>>
+CifradorAES <.. RepositorioContactos 
+UtileriaSeguridad <.. RepositorioUsuarios 
 
 @endumld
