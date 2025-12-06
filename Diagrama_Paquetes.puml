@@ -1,0 +1,48 @@
+@startuml Paquetes
+
+
+' 1. Capa de Presentación
+package Presentacion {
+    component InterfazUsuarioCLI
+}
+
+' 2. Capa de Dominio (Negocio)
+package Dominio {
+    ' Servicios
+    component ServicioUsuarios
+    component ServicioContactos
+
+    ' Entidades
+    [Usuario]
+    [Contacto]
+    [SolicitudCompartir]
+}
+
+' 3. Capa de Persistencia (Datos)
+package Persistencia {
+    ' Repositorios
+    component RepositorioUsuarios
+    component RepositorioContactos
+
+    ' Utilidades
+    component CifradorAES
+    component UtileriaSeguridad
+}
+
+
+' Presentacion usa Dominio
+InterfazUsuarioCLI --> ServicioUsuarios
+InterfazUsuarioCLI --> ServicioContactos 
+
+' Dominio usa Persistencia
+ServicioUsuarios --> RepositorioUsuarios
+ServicioContactos --> RepositorioContactos
+
+' Relaciones internas y de manipulación de entidades
+ServicioUsuarios ..> Usuario
+ServicioContactos ..> Contacto
+ServicioContactos ..> SolicitudCompartir
+
+RepositorioUsuarios ..> UtileriaSeguridad
+RepositorioContactos ..> CifradorAES
+@enduml
