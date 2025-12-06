@@ -21,7 +21,7 @@ public class Usuario implements Serializable {
     }
 
     public String getNombreCompleto() {
-        retunr nombreCompleto;
+        return nombreCompleto;
     }
 
     public String getpasswordhash() {
@@ -44,6 +44,7 @@ public class Usuario implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
+
 
 
 
