@@ -1,4 +1,4 @@
-package dominio;
+package Dominio;
 
 import Persistencia.UtileriaSeguridad;
 import java.io.Serializable;
@@ -44,5 +44,6 @@ public class Usuario implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
+
 
 
