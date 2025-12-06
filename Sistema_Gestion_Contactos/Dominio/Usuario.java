@@ -31,9 +31,7 @@ public class Usuario implements Serializable {
     public String getemail() {
         return email;
     }
-
-
-
+    
     public boolean validarpassword(String passwordIngresada) {
         return UtilieriaSeguridad.validarhash(passwordIngresada, this.passwordhash);
     }
@@ -46,3 +44,4 @@ public class Usuario implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
+
