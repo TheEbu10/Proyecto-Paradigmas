@@ -57,7 +57,7 @@ package persistencia {
     RepositorioContactos ..> CifradorAES
 }
 
-package presentacion {
+package UI {
     class InterfazUsuarioCLI {
         + iniciar()
         - mostrarMenuPrincipal()
@@ -71,6 +71,7 @@ package presentacion {
 Usuario "1" -- "*" Contacto : lista
 Usuario "1" --> "*" SolicitudCompartir : emisor
 Usuario "1" --> "*" SolicitudCompartir : receptor
+InterfazUsuarioCLI --> Usuario
 
 ' Relaciones de Implementación y Asociación
 RepositorioUsuarios ..> Usuario
