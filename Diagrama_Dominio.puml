@@ -1,14 +1,24 @@
-@startuml Dominio
+@startuml Sistema de Gestor de Contanctos
+title Modelo de Dominio - Sistema Gestor de Contactos
 
-entity Usuario
+class Usuario 
+class Contacto
+class SolicitudCompartir 
+class SistemaUsuarios 
 
-entity Contacto
+' Usuario tiene muchos contactos
+Usuario "1" -- "1..*" Contacto : posee >
 
-entity SolicitudCompartir
+' Solicitudes enviadas por un usuario
+Usuario "1" -- "0..*" SolicitudCompartir : envia >
 
-' Relaciones
-Usuario "1" -- "*" Contacto : gestiona
+' Solicitudes recibidas por un usuario
+Usuario "1" -- "0..*" SolicitudCompartir : recibe <
 
-Usuario "1" --> "*" SolicitudCompartir : envia
-Usuario "1" --> "*" SolicitudCompartir : recibe
+SolicitudCompartir "1" --> "1" Usuario : solicitante
+SolicitudCompartir "1" --> "1" Usuario : destinatario
+
+' SistemaUsuarios administra a varios usuarios
+SistemaUsuarios "1" -- "0..*" Usuario : contiene >
+
 @enduml
