@@ -1,5 +1,10 @@
 package Dominio;
-public class Usuario {
+
+import Persistencia.UtileriaSeguridad;
+import java.io.Serializable;
+public class Usuario implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private String nombreCompleto;
     private String nombreUsuario;
     private String passwordHash;
@@ -26,5 +31,3 @@ public class Usuario {
     public String getemail() {
         return email;
     }
-
-    
