@@ -1,0 +1,87 @@
+@startuml Clases
+' Paquetes
+package dominio {
+    class Usuario {
+        - nombreCompleto : String
+        - nombreUsuario : String
+        - passwordHash : String
+        - email : String
+        + getNombreUsuario()
+        + getPasswordHash()
+        + validarPassword(password) : boolean
+    }
+
+    class Contacto {
+        - nombre : String
+        - telefono : String
+        - email : String
+        - urlPaginaPersonal : String
+        - origenImportacion : String
+        + getNombre()
+        + toString()
+    }
+
+    class SolicitudCompartir {
+        - idEmisor : String
+        - idReceptor : String
+        - fechaSolicitud : Date
+        - estado : String
+    }
+}
+
+package persistencia {
+    class RepositorioUsuarios {
+        + guardar(usuario)
+        + buscarPorNombreUsuario(nombreUsuario) : Usuario
+    }
+
+    class RepositorioContactos {
+        + guardar(contacto, idUsuario)
+        + cargarListaContactos(idUsuario) : List<Contacto>
+        + guardarSolicitud(solicitud)
+        + cargarSolicitudesPendientes(idUsuario) : List<SolicitudCompartir>
+    }
+
+    class CifradorAES {
+        + cifrar(texto, llave) : byte[]
+        + descifrar(datos, llave) : String
+    }
+
+    class UtileriaSeguridad {
+        + generarHash(password) : String
+        + validarHash(password, hash) : boolean
+        + derivarLlave(password, sal) : byte[]
+    }
+
+    RepositorioUsuarios ..> UtileriaSeguridad : <<usa>>
+    RepositorioContactos ..> CifradorAES : <<usa>>
+}
+
+package presentacion {
+    class InterfazUsuarioCLI {
+        + iniciar()
+        - mostrarMenuPrincipal()
+        - registrarUsuario()
+        - login()
+        - gestionarContactos()
+    }
+}
+
+' Relaciones de Clases
+Usuario "1" -- "*" Contacto : lista
+Usuario "1" --> "*" SolicitudCompartir : emisor
+Usuario "1" --> "*" SolicitudCompartir : receptor
+
+' Dependencias de Servicios/Repositorios (Implícitas)
+' InterfazUsuarioCLI usa los servicios (no se definen explícitamente aquí, pero se implica la interacción)
+' Servicios usan repositorios
+
+' Relaciones de Implementación y Asociación
+RepositorioUsuarios ..> Usuario : <<persiste>>
+RepositorioContactos ..> Contacto : <<persiste>>
+RepositorioContactos ..> SolicitudCompartir : <<persiste>>
+
+CifradorAES <.. RepositorioContactos : <<usa>>
+UtileriaSeguridad <.. RepositorioUsuarios : <<usa>>
+
+@endumld
