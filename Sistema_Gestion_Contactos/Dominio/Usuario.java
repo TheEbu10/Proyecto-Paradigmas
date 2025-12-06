@@ -17,7 +17,7 @@ public class Usuario implements Serializable {
         this.passwordHash = UtileriaSeguridad.generarHash(passwordPlano);
         this.email = email;
     }
-
+// Constructor auxiliar
     public Usuario(String nombreCompleto, String nombreUsuario, String passwordHash) {
         this.nombreCompleto = nombreCompleto;
         this.nombreUsuario = nombreUsuario;
@@ -54,6 +54,7 @@ public class Usuario implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
+
 
 
 
