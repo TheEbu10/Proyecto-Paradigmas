@@ -1,5 +1,5 @@
-@startuml 
- title Modelo Dominio - Sistema de Gestión de Biblioteca
+@startuml Sistema
+title Modelo Dominio - Sistema de Gestión de Biblioteca
 
 class Usuario
 
@@ -8,9 +8,7 @@ class Contacto
 class SolicitudCompartir
 
 Usuario "1" -- "" Contacto : gestiona
-
 Usuario "1" --> "" SolicitudCompartir : envia
 Usuario "1" --> "*" SolicitudCompartir : recibe
-
 
 @enduml
