@@ -5,12 +5,12 @@ import java.io.Serializable;
 
 public class Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
-
+// Atributos
     private String nombreCompleto;
     private String nombreUsuario;
     private String passwordHash;
     private String email;
-
+//Constructores
     public Usuario(String nombreCompleto, String nombreUsuario, String passwordHash, String email) {
         this.nombreCompleto = nombreCompleto;
         this.nombreUsuario = nombreUsuario;
@@ -32,7 +32,8 @@ public class Usuario implements Serializable {
     public String getEmail() {
         return email;
     }
-    
+
+    //Validar contraseña
     public boolean validarpassword(String passwordIngresada) {
         return UtilieriaSeguridad.validarHash(passwordIngresada, this.passwordHash);
     }
@@ -45,6 +46,7 @@ public class Usuario implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
+
 
 
 
