@@ -65,8 +65,8 @@ public class Contacto implements Serializable {
     //Detalles de contacto
     public String toString() {
         String detalle = "Nombre: " + nombre + 
-                         "\nTeléfono: " + telefono +
-                         "\nEmail: " + email;
+                        "\nTeléfono: " + telefono +
+                        "\nEmail: " + email;
         
         if (urlPaginaPersonal != null && !urlPaginaPersonal.isEmpty()) {
             detalle += "\nURL Personal: " + urlPaginaPersonal;
