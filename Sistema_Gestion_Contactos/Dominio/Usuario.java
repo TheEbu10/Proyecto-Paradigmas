@@ -43,7 +43,7 @@ public class Usuario implements Serializable {
 
     //Validar contraseña
     public boolean validarpassword(String passwordIngresada) {
-        return UtilieriaSeguridad.validarHash(passwordIngresada, this.passwordHash);
+        return UtileriaSeguridad.validarHash(passwordIngresada, this.passwordHash);
     }
 
     @Override
@@ -54,6 +54,8 @@ public class Usuario implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
+}
+
 
 
 

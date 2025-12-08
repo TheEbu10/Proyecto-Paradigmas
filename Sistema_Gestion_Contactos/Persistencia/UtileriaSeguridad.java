@@ -1,4 +1,4 @@
-package persistencia;
+package Persistencia;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

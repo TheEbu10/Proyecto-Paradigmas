@@ -1,4 +1,4 @@
-package persistencia;
+package Persistencia;
 
 import Dominio.Contacto;
 import Dominio.SolicitudCompartir;

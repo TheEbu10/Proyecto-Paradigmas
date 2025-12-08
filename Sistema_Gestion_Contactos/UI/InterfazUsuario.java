@@ -1,10 +1,10 @@
-package presentacion;
+package UI;
 
-import dominio.Contacto;
-import dominio.SolicitudCompartir;
-import dominio.Usuario;
-import dominio.ServicioContactos;
-import dominio.ServicioUsuarios;
+import Dominio.Contacto;
+import Dominio.SolicitudCompartir;
+import Dominio.Usuario;
+import Dominio.ServicioContactos;
+import Dominio.ServicioUsuarios;
 import java.util.List;
 import java.util.Scanner;
 
@@ -185,7 +185,7 @@ public class InterfazUsuario {
         }
 
         try {
-            servicioContactos.solicitarCompartir(usuarioActual, nombreReceptor);
+            servicioContactos.solicitarCompartir(usuarioActual, passwordActual, nombreReceptor);
             System.out.println("Solicitud enviada a " + nombreReceptor + " correctamente.");
         } catch (Exception e) {
             System.out.println("ERROR al enviar solicitud: " + e.getMessage());

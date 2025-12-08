@@ -1,7 +1,6 @@
-package persistencia;
+package Persistencia;
 
 import javax.crypto.Cipher;
-import javax.security.auth.kerberos.KerberosKey;
 import java.security.Key;
 import java.util.Base64;
 
