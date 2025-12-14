@@ -1,0 +1,1 @@
+En esta carpeta se almacenaran los archivos guardados de todo el programa 
