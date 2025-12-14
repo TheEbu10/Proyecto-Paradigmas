@@ -99,6 +99,7 @@ public class InterfazUsuario {
             System.out.println("2. Ver Listado de Contactos");
             System.out.println("3. Compartir Contactos (Enviar Solicitud)");
             System.out.println("4. Revisar Solicitudes Recibidas");
+            System.out.println("5. Ver Estado de Solicitudes Enviadas"); // Nueva opción
             System.out.println("0. Cerrar Sesión (Logout)");
             System.out.print("Seleccione una opción: ");
             
@@ -109,6 +110,7 @@ public class InterfazUsuario {
                     case 2: verListadoContactos(); break;
                     case 3: solicitarCompartir(); break;
                     case 4: revisarSolicitudes(); break;
+                    case 5: verEstadoSolicitudesEnviadas(); break; 
                     case 0:
                         System.out.println("🚪 Sesión cerrada.");
                         this.usuarioActual = null;
@@ -230,5 +232,33 @@ public class InterfazUsuario {
             System.out.println("ERROR al procesar solicitud: " + e.getMessage());
         }
     }
+
+    private void verEstadoSolicitudesEnviadas() {
+    try {
+        List<SolicitudCompartir> solicitudes = servicioContactos.verSolicitudesEnviadas(usuarioActual);
+
+        if (solicitudes.isEmpty()) {
+            System.out.println("No ha enviado solicitudes de contactos.");
+            return;
+        }
+
+        System.out.println("\n--- SOLICITUDES ENVIADAS ---");
+        for (int i = 0; i < solicitudes.size(); i++) {
+            SolicitudCompartir s = solicitudes.get(i);
+            System.out.printf("[%d] ID %s: A %s - Estado: %s\n", 
+                              i + 1, 
+                              s.getIdSolicitud(), 
+                              s.getNombreDestinatario(), 
+                              s.getEstado().getDescripcion());
+        }
+
+        // Opcionalmente, permitir ver el detalle de la solicitud
+        System.out.println("\nPresione Enter para continuar...");
+        scanner.nextLine();
+
+    } catch (Exception e) {
+        System.out.println("ERROR al cargar solicitudes enviadas: " + e.getMessage());
+    }
+}
 
 }

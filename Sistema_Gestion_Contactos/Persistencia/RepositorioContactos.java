@@ -127,7 +127,7 @@ public class RepositorioContactos {
         // ... (código que llama a cargarTodasSolicitudes y guardarTodasSolicitudes)
         List<SolicitudCompartir> solicitudes = cargarTodasSolicitudes();
         
-        int index = -1;
+       int index = -1;
         for (int i = 0; i < solicitudes.size(); i++) {
             if (solicitudes.get(i).getIdSolicitud().equals(nuevaSolicitud.getIdSolicitud())) {
                 index = i;
@@ -136,9 +136,9 @@ public class RepositorioContactos {
         }
 
         if (index != -1) {
-            solicitudes.set(index, nuevaSolicitud); // Actualiza el estado
+            solicitudes.set(index, nuevaSolicitud); 
         } else {
-            solicitudes.add(nuevaSolicitud); // Nueva solicitud
+            solicitudes.add(nuevaSolicitud);
         }
         
         guardarTodasSolicitudes(solicitudes);
@@ -157,5 +157,12 @@ public class RepositorioContactos {
                 .filter(s -> s.getIdSolicitud().equals(idSolicitud))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<SolicitudCompartir> cargarSolicitudesEnviadas(String idUsuarioSolicitante) {
+        List<SolicitudCompartir> todas = cargarTodasSolicitudes();
+        return todas.stream()
+                .filter(s -> s.getNombreSolicitante().equals(idUsuarioSolicitante))
+                .collect(Collectors.toList());
     }
 }
