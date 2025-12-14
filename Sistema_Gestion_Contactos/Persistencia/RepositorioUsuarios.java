@@ -64,4 +64,15 @@ public class RepositorioUsuarios {
             System.out.println("Error guardando usuarios: " + e.getMessage());
         }
     }
+
+    public Usuario buscarPorEmail(String email) {
+        List<Usuario> usuarios = cargarTodos();
+
+        for (Usuario u : usuarios) {
+            if (u.getEmail().equalsIgnoreCase(email)) {
+                return u;
+            }
+        }
+        return null; 
+    }
 }

@@ -9,8 +9,15 @@ public class ServicioUsuarios {
 
     public void registrarUsuario(String nombreCompleto, String nombreUsuario, String password, String email) throws Exception {
         if (repo.buscarPorNombreUsuario(nombreUsuario) != null) {
-            throw new Exception("El usuario ya existe: " + nombreUsuario);
+            throw new Exception("El nombre de usuario ya existe");
         }
+        
+        // 2. Verificar unicidad de Correo Electrónico
+        if (repo.buscarPorEmail(email) != null) {
+            throw new Exception("El correo electrónico en uso");
+        }
+        
+        // Si ambas verificaciones pasan, se procede al registro
         Usuario u = new Usuario(nombreCompleto, nombreUsuario, password, email);
         repo.guardar(u);
     }
@@ -22,4 +29,6 @@ public class ServicioUsuarios {
         if (!valido) throw new Exception("Credenciales inválidas");
         return u;
     }
+
+    
 }
