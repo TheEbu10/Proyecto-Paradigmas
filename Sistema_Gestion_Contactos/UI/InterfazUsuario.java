@@ -107,7 +107,7 @@ public class InterfazUsuario {
                     case 4: revisarSolicitudes(); break;
                     case 5: verEstadoSolicitudesEnviadas(); break; 
                     case 0:
-                        System.out.println("🚪 Sesión cerrada.");
+                        System.out.println("Sesión cerrada.");
                         this.usuarioActual = null;
                         this.passwordActual = null;
                         return; // Sale del loop y vuelve al menú principal
