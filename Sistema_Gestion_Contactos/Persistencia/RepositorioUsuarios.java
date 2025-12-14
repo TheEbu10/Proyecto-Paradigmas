@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepositorioUsuarios {
-    private static final String Directorio_Datos = "Sistema_Gestion_Contactos/Persistencia/Datos/";
+    private static final String Directorio_Datos = "Sistema_Gestion_Contactos/Persistencia/Users/";
     private static final String ARCHIVO_USUARIOS = "usuarios.dat";
     private static final String RUTA_COMPLETA = Directorio_Datos + ARCHIVO_USUARIOS;
 

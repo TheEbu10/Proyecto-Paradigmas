@@ -11,12 +11,25 @@ import java.util.stream.Collectors;
 
 public class RepositorioContactos {
 
+    // NUEVAS CONSTANTES DE RUTA
+    private static final String DIRECTORIO_DATOS = "Datos";
     private static final String EXTENSION_CONTACTOS = ".dat";
-    private static final String ARCHIVO_SOLICITUDES = "solicitudes.ser"; // Usaremos serialización para las solicitudes
+    private static final String ARCHIVO_SOLICITUDES_NOMBRE = "solicitudes.ser";
+    private static final String ARCHIVO_SOLICITUDES = DIRECTORIO_DATOS + File.separator + ARCHIVO_SOLICITUDES_NOMBRE;
 
 
+    // MÉTODO AUXILIAR PARA ASEGURAR EL DIRECTORIO
+    private void asegurarDirectorio() {
+        File directorio = new File(DIRECTORIO_DATOS);
+        if (!directorio.exists()) {
+            directorio.mkdirs();
+        }
+    }
 
     public void guardarListaContactos(String idUsuario, List<Contacto> contactos, String passwordUsuario) throws Exception {
+        // Aseguramos que la carpeta "Datos" exista
+        asegurarDirectorio();
+        
         // 1. Derivar la llave AES a partir de la contraseña
         Key key = UtileriaSeguridad.derivarLlave(passwordUsuario);
 
@@ -33,14 +46,20 @@ public class RepositorioContactos {
         String datosCifrados = CifradorAES.cifrar(datosSerializadosBase64, key);
 
         // 5. Guardar el resultado cifrado en el archivo del usuario
-        try (PrintWriter pw = new PrintWriter(new FileWriter(idUsuario + EXTENSION_CONTACTOS))) {
+        // CAMBIO CRÍTICO: Construir la ruta completa
+        String rutaArchivoUsuario = DIRECTORIO_DATOS + File.separator + idUsuario + EXTENSION_CONTACTOS;
+        
+        try (PrintWriter pw = new PrintWriter(new FileWriter(rutaArchivoUsuario))) {
             pw.println(datosCifrados);
         }
     }
 
 
     public List<Contacto> cargarListaContactos(String idUsuario, String passwordUsuario) throws Exception {
-        File archivo = new File(idUsuario + EXTENSION_CONTACTOS);
+        // CAMBIO CRÍTICO: Construir la ruta completa para cargar
+        String rutaArchivoUsuario = DIRECTORIO_DATOS + File.separator + idUsuario + EXTENSION_CONTACTOS;
+        
+        File archivo = new File(rutaArchivoUsuario);
         if (!archivo.exists() || archivo.length() == 0) {
             return new ArrayList<>();
         }
@@ -71,7 +90,8 @@ public class RepositorioContactos {
     
 
     // Las solicitudes se guardarán en un archivo
-
+    // La constante ARCHIVO_SOLICITUDES ya fue modificada arriba
+    
     private List<SolicitudCompartir> cargarTodasSolicitudes() {
         File archivo = new File(ARCHIVO_SOLICITUDES);
         if (!archivo.exists() || archivo.length() == 0) {
@@ -91,6 +111,9 @@ public class RepositorioContactos {
     }
 
     private void guardarTodasSolicitudes(List<SolicitudCompartir> solicitudes) {
+        // Aseguramos que la carpeta "Datos" exista
+        asegurarDirectorio();
+        
         try (FileOutputStream fos = new FileOutputStream(ARCHIVO_SOLICITUDES);
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(solicitudes);
@@ -99,10 +122,11 @@ public class RepositorioContactos {
         }
     }
     
+    // ... (Resto de los métodos que usan cargar/guardarTodasSolicitudes)
     public void guardarSolicitud(SolicitudCompartir nuevaSolicitud) {
+        // ... (código que llama a cargarTodasSolicitudes y guardarTodasSolicitudes)
         List<SolicitudCompartir> solicitudes = cargarTodasSolicitudes();
         
-        // Intentar actualizar si existe (por ID), si no, añadir
         int index = -1;
         for (int i = 0; i < solicitudes.size(); i++) {
             if (solicitudes.get(i).getIdSolicitud().equals(nuevaSolicitud.getIdSolicitud())) {
@@ -124,7 +148,7 @@ public class RepositorioContactos {
         List<SolicitudCompartir> todas = cargarTodasSolicitudes();
         return todas.stream()
                 .filter(s -> s.getNombreDestinatario().equals(idUsuarioReceptor) && 
-                             s.getEstado() == SolicitudCompartir.EstadoSolicitud.PENDIENTE)
+                              s.getEstado() == SolicitudCompartir.EstadoSolicitud.PENDIENTE)
                 .collect(Collectors.toList());
     }
 
