@@ -35,7 +35,7 @@ public class ServicioContactos {
         return repo.cargarSolicitudesPendientes(receptor.getNombreUsuario());
     }
 
-   public void aceptarSolicitud(String idSolicitud, Usuario receptor, String passwordReceptor) throws Exception {
+    public void aceptarSolicitud(String idSolicitud, Usuario receptor, String passwordReceptor) throws Exception {
     SolicitudCompartir s = repo.buscarSolicitudPorId(idSolicitud);
     if (s == null) throw new Exception("Solicitud no encontrada");
     if (!s.getNombreDestinatario().equals(receptor.getNombreUsuario())) throw new Exception("Solicitud no dirigida a este usuario");
@@ -119,5 +119,4 @@ public class ServicioContactos {
     // 2. Guardar la solicitud actualizada en el repositorio
     repo.guardarSolicitud(s); 
     }
-   
 }

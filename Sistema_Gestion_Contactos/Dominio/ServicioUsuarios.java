@@ -26,7 +26,7 @@ public class ServicioUsuarios {
         Usuario u = repo.buscarPorNombreUsuario(nombreUsuario);
         if (u == null) throw new Exception("Usuario no encontrado");
         boolean valido = UtileriaSeguridad.validarHash(password, u.getPasswordhash());
-        if (!valido) throw new Exception("Credenciales inválidas");
+        if (!valido) throw new Exception("Contraseña inválidas");
         return u;
     }
 
