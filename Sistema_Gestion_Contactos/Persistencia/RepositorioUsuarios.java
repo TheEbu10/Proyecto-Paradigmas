@@ -10,7 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RepositorioUsuarios {
+    private static final String Directorio_Datos = "Users/";
     private static final String ARCHIVO_USUARIOS = "usuarios.dat";
+    private static final String RUTA_COMPLETA = Directorio_Datos + ARCHIVO_USUARIOS;
 
     public void guardar(Usuario usuario) {
         List<Usuario> usuarios = cargarTodos();
@@ -39,7 +41,7 @@ public class RepositorioUsuarios {
     }
 
     private List<Usuario> cargarTodos() {
-        File archivo = new File(ARCHIVO_USUARIOS);
+        File archivo = new File(RUTA_COMPLETA);
 
         if (!archivo.exists()) {
             return new ArrayList<>();
@@ -56,10 +58,10 @@ public class RepositorioUsuarios {
     }
 
     private void guardarLista(List<Usuario> usuarios) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARCHIVO_USUARIOS))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(RUTA_COMPLETA))) {
             oos.writeObject(usuarios);
         } catch (Exception e) {
-            System.out.println("⚠ Error guardando usuarios: " + e.getMessage());
+            System.out.println("Error guardando usuarios: " + e.getMessage());
         }
     }
 }
