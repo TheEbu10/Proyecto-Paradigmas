@@ -12,10 +12,17 @@ public class Contacto implements Serializable {
     private String origenImportacion;
 
     public Contacto(String nombre, String telefono, String email, String urlPaginaPersonal) {
-        this.nombre = nombre;
-        this.telefono = telefono;
-        this.email = email;
-        this.urlPaginaPersonal = urlPaginaPersonal;
+        // Validaciones básicas: nombre y teléfono no pueden estar vacíos
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del contacto no puede estar vacío");
+        }
+        if (telefono == null || telefono.trim().isEmpty()) {
+            throw new IllegalArgumentException("El teléfono del contacto no puede estar vacío");
+        }
+        this.nombre = nombre.trim();
+        this.telefono = telefono.trim();
+        this.email = (email == null) ? "" : email.trim();
+        this.urlPaginaPersonal = (urlPaginaPersonal == null || urlPaginaPersonal.trim().isEmpty()) ? null : urlPaginaPersonal.trim();
         this.origenImportacion = null;
     }
 

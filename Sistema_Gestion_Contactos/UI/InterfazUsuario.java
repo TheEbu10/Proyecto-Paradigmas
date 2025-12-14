@@ -55,14 +55,11 @@ public class InterfazUsuario {
 
     private void registrarUsuario() {
         System.out.println("\n--- REGISTRO ---");
-        System.out.print("Nombre completo: ");
-        String nombreCompleto = scanner.nextLine();
-        System.out.print("Usuario: ");
-        String usuario = scanner.nextLine();
-        System.out.print("Contraseña: ");
-        String password = scanner.nextLine();
-        System.out.print("Correo electrónico: ");
-        String email = scanner.nextLine();
+        // Leemos cada dato obligatoriamente y evitamos valores vacíos
+        String nombreCompleto = leerNoVacio("Nombre completo: ");
+        String usuario = leerNoVacio("Usuario: ");
+        String password = leerNoVacio("Contraseña: ");
+        String email = leerNoVacio("Correo electrónico: ");
         
         try {
             servicioUsuarios.registrarUsuario(nombreCompleto, usuario, password, email);
@@ -74,10 +71,8 @@ public class InterfazUsuario {
 
     private void login() {
         System.out.println("\n--- LOGIN ---");
-        System.out.print("Usuario: ");
-        String usuario = scanner.nextLine();
-        System.out.print("Contraseña: ");
-        String password = scanner.nextLine();
+        String usuario = leerNoVacio("Usuario: ");
+        String password = leerNoVacio("Contraseña: ");
 
         try {
             this.usuarioActual = servicioUsuarios.autenticar(usuario, password);
@@ -127,14 +122,13 @@ public class InterfazUsuario {
     
     private void registrarContacto() {
         System.out.println("\n--- REGISTRAR CONTACTO ---");
-        System.out.print("Nombre del contacto: ");
-        String nombre = scanner.nextLine();
-        System.out.print("Teléfono: ");
-        String telefono = scanner.nextLine();
-        System.out.print("Correo electrónico: ");
-        String email = scanner.nextLine();
+        // Nombre y teléfono son obligatorios; email y url son opcionales
+        String nombre = leerNoVacio("Nombre del contacto: ");
+        String telefono = leerNoVacio("Teléfono: ");
+        System.out.print("Correo electrónico (opcional): ");
+        String email = scanner.nextLine().trim();
         System.out.print("URL de página personal (opcional, deje vacío para omitir): ");
-        String url = scanner.nextLine();
+        String url = scanner.nextLine().trim();
 
         try {
             Contacto nuevoContacto = new Contacto(nombre, telefono, email, url.isEmpty() ? null : url);
@@ -178,8 +172,7 @@ public class InterfazUsuario {
 
     private void solicitarCompartir() {
         System.out.println("\n--- SOLICITAR COMPARTIR CONTACTOS ---");
-        System.out.print("Ingrese el nombre de usuario de la persona a la que desea compartir su lista: ");
-        String nombreReceptor = scanner.nextLine();
+        String nombreReceptor = leerNoVacio("Ingrese el nombre de usuario de la persona a la que desea compartir su lista: ");
         
         if (nombreReceptor.equals(usuarioActual.getNombreUsuario())) {
              System.out.println("No puede compartir la lista consigo mismo.");
@@ -260,5 +253,21 @@ public class InterfazUsuario {
         System.out.println("ERROR al cargar solicitudes enviadas: " + e.getMessage());
     }
 }
+
+    /**
+     * Lee una entrada desde consola y obliga a que no sea vacía.
+     * Reintenta hasta que el usuario ingrese un valor no vacío.
+     */
+    private String leerNoVacio(String prompt) {
+        String valor;
+        do {
+            System.out.print(prompt);
+            valor = scanner.nextLine();
+            if (valor == null || valor.trim().isEmpty()) {
+                System.out.println("El valor no puede estar vacío. Intente nuevamente.");
+            }
+        } while (valor == null || valor.trim().isEmpty());
+        return valor.trim();
+    }
 
 }
