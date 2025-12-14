@@ -19,7 +19,7 @@ public class UtileriaSeguridad {
         }
     }
 
-    // Valida un hash
+    // Validación del hash
     public static boolean validarHash(String passwordPlano, String passwordHash) {
         String hashGenerado = generarHash(passwordPlano);
         return hashGenerado.equals(passwordHash);
