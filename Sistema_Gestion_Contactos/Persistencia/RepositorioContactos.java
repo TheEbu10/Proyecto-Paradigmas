@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class RepositorioContactos {
 
     // NUEVAS CONSTANTES DE RUTA
-    private static final String DIRECTORIO_DATOS = "Datos";
+    private static final String DIRECTORIO_DATOS = "Sistema_Gestion_Contactos/Persistencia/Users";
     private static final String EXTENSION_CONTACTOS = ".dat";
     private static final String ARCHIVO_SOLICITUDES_NOMBRE = "solicitudes.ser";
     private static final String ARCHIVO_SOLICITUDES = DIRECTORIO_DATOS + File.separator + ARCHIVO_SOLICITUDES_NOMBRE;
