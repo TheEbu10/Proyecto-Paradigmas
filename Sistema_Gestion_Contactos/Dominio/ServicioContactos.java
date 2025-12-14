@@ -74,4 +74,27 @@ public class ServicioContactos {
     public List<SolicitudCompartir> verSolicitudesEnviadas(Usuario solicitante) {
         return repo.cargarSolicitudesEnviadas(solicitante.getNombreUsuario());
     }
+
+    public void rechazarSolicitud(String idSolicitud, Usuario receptor) throws Exception {
+    SolicitudCompartir s = repo.buscarSolicitudPorId(idSolicitud);
+    
+    if (s == null) {
+        throw new Exception("Solicitud no encontrada.");
+    }
+    // Verificación de que la solicitud sea para el usuario logeado
+    if (!s.getNombreDestinatario().equals(receptor.getNombreUsuario())) {
+        throw new Exception("Solicitud no dirigida a este usuario.");
+    }
+    // Verificación de que la solicitud esté pendiente
+    if (s.getEstado() != SolicitudCompartir.EstadoSolicitud.PENDIENTE) {
+        throw new Exception("Solicitud ya procesada: estado actual " + s.getEstado().getDescripcion());
+    }
+
+    // 1. Cambiar el estado a RECHAZADA
+    s.setEstado(SolicitudCompartir.EstadoSolicitud.RECHAZADA);
+    
+    // 2. Guardar la solicitud actualizada en el repositorio
+    repo.guardarSolicitud(s); 
+    }
+   
 }

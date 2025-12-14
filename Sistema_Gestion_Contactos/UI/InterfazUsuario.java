@@ -189,40 +189,55 @@ public class InterfazUsuario {
     
     private void revisarSolicitudes() {
         try {
-            List<SolicitudCompartir> solicitudes = servicioContactos.verSolicitudesPendientes(usuarioActual);
+        List<SolicitudCompartir> solicitudes = servicioContactos.verSolicitudesPendientes(usuarioActual);
+
+        if (solicitudes.isEmpty()) {
+            System.out.println("No hay solicitudes pendientes de contacto.");
+            return;
+        }
+
+        System.out.println("\n--- SOLICITUDES PENDIENTES ---");
+        for (int i = 0; i < solicitudes.size(); i++) {
+            SolicitudCompartir s = solicitudes.get(i);
+            System.out.printf("[%d] ID %s: Solicitud de %s\n", i + 1, s.getIdSolicitud(), s.getNombreSolicitante());
+        }
+
+        System.out.print("\nIngrese el número de la solicitud que desea procesar (o 0 para volver): ");
+        String linea = scanner.nextLine();
+        int indice;
+        try {
+            indice = Integer.parseInt(linea);
+        } catch (NumberFormatException e) {
+            System.out.println("Entrada inválida.");
+            return;
+        }
+
+
+        if (indice > 0 && indice <= solicitudes.size()) {
+            SolicitudCompartir s = solicitudes.get(indice - 1);
             
-            if (solicitudes.isEmpty()) {
-                System.out.println("No tiene solicitudes de contactos pendientes.");
-                return;
+            // --- Lógica de ACEPTAR/RECHAZAR ---
+            System.out.print("¿Qué acción desea realizar con la solicitud de " + s.getNombreSolicitante() + "? (Aceptar=A / Rechazar=R / Nada=N): ");
+            String respuesta = scanner.nextLine().trim().toUpperCase();
+
+            if (respuesta.equals("A")) {
+                // Llama al método aceptar (se asume que incluye la lógica de no duplicados)
+                servicioContactos.aceptarSolicitud(s.getIdSolicitud(), usuarioActual, passwordActual);
+                System.out.println("Lista de contactos de " + s.getNombreSolicitante() + " importada con éxito!");
+            } else if (respuesta.equals("R")) {
+                // Llama al nuevo método rechazar
+                servicioContactos.rechazarSolicitud(s.getIdSolicitud(), usuarioActual);
+                System.out.println("Solicitud de " + s.getNombreSolicitante() + " ha sido rechazada.");
+            } else {
+                System.out.println("No se realizó ninguna acción.");
             }
+            // ------------------------------------
+        } else if (indice != 0) {
+            System.out.println("Opción de solicitud no válida.");
+        }
 
-            System.out.println("\n--- SOLICITUDES PENDIENTES ---");
-            for (int i = 0; i < solicitudes.size(); i++) {
-                SolicitudCompartir s = solicitudes.get(i);
-                System.out.printf("[%d] ID %s: Solicitud de %s\n", i + 1, s.getIdSolicitud(), s.getNombreSolicitante());
-            }
-
-            System.out.print("\nIngrese el número de la solicitud que desea aceptar (o 0 para volver): ");
-            int indice = Integer.parseInt(scanner.nextLine());
-
-            if (indice > 0 && indice <= solicitudes.size()) {
-                SolicitudCompartir s = solicitudes.get(indice - 1);
-                
-                // Opción para aceptar o rechazar (simplificaremos a solo aceptar por ahora)
-                System.out.print("¿Desea aceptar la lista de " + s.getNombreSolicitante() + "? (S/N): ");
-                String respuesta = scanner.nextLine().trim().toUpperCase();
-
-                if (respuesta.equals("S")) {
-                    servicioContactos.aceptarSolicitud(s.getIdSolicitud(), usuarioActual, passwordActual);
-                    System.out.println("Lista de contactos de " + s.getNombreSolicitante() + " importada con éxito!");
-                } else {
-                    // Lógica para rechazar (requeriría un método 'rechazarSolicitud' en ServicioContactos)
-                    System.out.println("Solicitud de " + s.getNombreSolicitante() + " rechazada.");
-                }
-            }
-
-        } catch (Exception e) {
-            System.out.println("ERROR al procesar solicitud: " + e.getMessage());
+    } catch (Exception e) {
+        System.out.println("ERROR al procesar solicitud: " + e.getMessage());
         }
     }
 
