@@ -175,8 +175,8 @@ public class InterfazUsuario {
         String nombreReceptor = leerNoVacio("Ingrese el nombre de usuario de la persona a la que desea compartir su lista: ");
         
         if (nombreReceptor.equals(usuarioActual.getNombreUsuario())) {
-             System.out.println("No puede compartir la lista consigo mismo.");
-             return;
+            System.out.println("No puede compartir la lista consigo mismo.");
+            return;
         }
 
         try {
@@ -223,7 +223,7 @@ public class InterfazUsuario {
             if (respuesta.equals("A")) {
                 // Llama al método aceptar (se asume que incluye la lógica de no duplicados)
                 servicioContactos.aceptarSolicitud(s.getIdSolicitud(), usuarioActual, passwordActual);
-                System.out.println("Lista de contactos de " + s.getNombreSolicitante() + " importada con éxito!");
+                System.out.println("Lista de contactos de " + s.getNombreSolicitante() + " importada con éxito");
             } else if (respuesta.equals("R")) {
                 // Llama al nuevo método rechazar
                 servicioContactos.rechazarSolicitud(s.getIdSolicitud(), usuarioActual);
@@ -261,7 +261,7 @@ public class InterfazUsuario {
         }
 
         // Opcionalmente, permitir ver el detalle de la solicitud
-        System.out.println("\nPresione Enter para continuar...");
+        System.out.println("\nPresione Enter para continuar");
         scanner.nextLine();
 
     } catch (Exception e) {
@@ -269,10 +269,7 @@ public class InterfazUsuario {
     }
 }
 
-    /**
-     * Lee una entrada desde consola y obliga a que no sea vacía.
-     * Reintenta hasta que el usuario ingrese un valor no vacío.
-     */
+    // Metodo para que el usuario no deje un campo vacio 
     private String leerNoVacio(String prompt) {
         String valor;
         do {

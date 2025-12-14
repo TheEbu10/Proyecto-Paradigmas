@@ -110,7 +110,7 @@ public class ServicioContactos {
     }
     // Verificación de que la solicitud esté pendiente
     if (s.getEstado() != SolicitudCompartir.EstadoSolicitud.PENDIENTE) {
-        throw new Exception("Solicitud ya procesada: estado actual " + s.getEstado().getDescripcion());
+        throw new Exception("Solicitud enviada: estado actual " + s.getEstado().getDescripcion());
     }
 
     // 1. Cambiar el estado a RECHAZADA

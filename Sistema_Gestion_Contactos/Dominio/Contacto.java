@@ -12,13 +12,6 @@ public class Contacto implements Serializable {
     private String origenImportacion;
 
     public Contacto(String nombre, String telefono, String email, String urlPaginaPersonal) {
-        // Validaciones básicas: nombre y teléfono no pueden estar vacíos
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del contacto no puede estar vacío");
-        }
-        if (telefono == null || telefono.trim().isEmpty()) {
-            throw new IllegalArgumentException("El teléfono del contacto no puede estar vacío");
-        }
         this.nombre = nombre.trim();
         this.telefono = telefono.trim();
         this.email = (email == null) ? "" : email.trim();
@@ -29,9 +22,7 @@ public class Contacto implements Serializable {
     
      //Constructor para contactos importados de otro usuario
     public Contacto(Contacto original, String nombreUsuarioEmisor) {
-        
         this(original.getNombre(), original.getTelefono(), original.getEmail(), original.getUrlPaginaPersonal());
-        
         this.nombre = original.getNombre() + " (contacto de " + nombreUsuarioEmisor + ")";
         this.origenImportacion = nombreUsuarioEmisor;
     }

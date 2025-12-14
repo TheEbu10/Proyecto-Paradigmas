@@ -30,8 +30,6 @@ public class UtileriaSeguridad {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] keyBytes = md.digest(passwordUsuario.getBytes());
-            
-           
             return new SecretKeySpec(keyBytes, "AES");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error al derivar llave.", e);

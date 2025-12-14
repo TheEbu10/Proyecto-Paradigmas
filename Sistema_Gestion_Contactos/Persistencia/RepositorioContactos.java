@@ -80,7 +80,7 @@ public class RepositorioContactos {
         // 4. Descodificar de Base64 y Deserializar la lista
         byte[] datos = Base64.getDecoder().decode(datosSerializadosBase64);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(datos);
-             ObjectInputStream ois = new ObjectInputStream(bis)) {
+            ObjectInputStream ois = new ObjectInputStream(bis)) {
             
             @SuppressWarnings("unchecked")
             List<Contacto> contactos = (List<Contacto>) ois.readObject();
@@ -99,7 +99,7 @@ public class RepositorioContactos {
         }
 
         try (FileInputStream fis = new FileInputStream(archivo);
-             ObjectInputStream ois = new ObjectInputStream(fis)) {
+            ObjectInputStream ois = new ObjectInputStream(fis)) {
             
             @SuppressWarnings("unchecked")
             List<SolicitudCompartir> solicitudes = (List<SolicitudCompartir>) ois.readObject();
@@ -115,7 +115,7 @@ public class RepositorioContactos {
         asegurarDirectorio();
         
         try (FileOutputStream fos = new FileOutputStream(ARCHIVO_SOLICITUDES);
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(solicitudes);
         } catch (IOException e) {
             System.err.println("Error al guardar solicitudes: " + e.getMessage());
@@ -127,7 +127,7 @@ public class RepositorioContactos {
         // ... (código que llama a cargarTodasSolicitudes y guardarTodasSolicitudes)
         List<SolicitudCompartir> solicitudes = cargarTodasSolicitudes();
         
-       int index = -1;
+        int index = -1;
         for (int i = 0; i < solicitudes.size(); i++) {
             if (solicitudes.get(i).getIdSolicitud().equals(nuevaSolicitud.getIdSolicitud())) {
                 index = i;
@@ -148,7 +148,7 @@ public class RepositorioContactos {
         List<SolicitudCompartir> todas = cargarTodasSolicitudes();
         return todas.stream()
                 .filter(s -> s.getNombreDestinatario().equals(idUsuarioReceptor) && 
-                              s.getEstado() == SolicitudCompartir.EstadoSolicitud.PENDIENTE)
+                            s.getEstado() == SolicitudCompartir.EstadoSolicitud.PENDIENTE)
                 .collect(Collectors.toList());
     }
 
