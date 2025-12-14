@@ -4,6 +4,7 @@ import Persistencia.RepositorioContactos;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,42 +35,64 @@ public class ServicioContactos {
         return repo.cargarSolicitudesPendientes(receptor.getNombreUsuario());
     }
 
-    public void aceptarSolicitud(String idSolicitud, Usuario receptor, String passwordReceptor) throws Exception {
-        SolicitudCompartir s = repo.buscarSolicitudPorId(idSolicitud);
-        if (s == null) throw new Exception("Solicitud no encontrada");
-        if (!s.getNombreDestinatario().equals(receptor.getNombreUsuario())) throw new Exception("Solicitud no dirigida a este usuario");
-        if (s.getEstado() != SolicitudCompartir.EstadoSolicitud.PENDIENTE) throw new Exception("Solicitud ya procesada");
+   public void aceptarSolicitud(String idSolicitud, Usuario receptor, String passwordReceptor) throws Exception {
+    SolicitudCompartir s = repo.buscarSolicitudPorId(idSolicitud);
+    if (s == null) throw new Exception("Solicitud no encontrada");
+    if (!s.getNombreDestinatario().equals(receptor.getNombreUsuario())) throw new Exception("Solicitud no dirigida a este usuario");
+    if (s.getEstado() != SolicitudCompartir.EstadoSolicitud.PENDIENTE) throw new Exception("Solicitud ya procesada: estado actual " + s.getEstado().getDescripcion());
 
-       List<Contacto> actuales = repo.cargarListaContactos(receptor.getNombreUsuario(), passwordReceptor);
+    List<Contacto> actuales = repo.cargarListaContactos(receptor.getNombreUsuario(), passwordReceptor);
+    
+    // 1. Crear un Map donde la clave es el teléfono y el valor es el objeto Contacto existente.
+    Map<String, Contacto> contactosActualesPorTelefono = actuales.stream()
+        .collect(Collectors.toMap(Contacto::getTelefono, c -> c));
         
-        // 1. Crear un Set para una búsqueda rápida de nombres de contactos ya existentes
-        // Esto asume que el nombre es la clave para la duplicidad
-        Set<String> nombresActuales = actuales.stream()
-            .map(c -> c.getNombre().toLowerCase())
-            .collect(Collectors.toSet()); // Necesitas importar java.util.stream.Collectors y java.util.Set
-            
-        int contactosImportados = 0;
+    int contactosImportados = 0;
+    List<String> mensajesDuplicados = new ArrayList<>(); 
 
-        for (Contacto c : s.getContactosCompartidos()) {
+    for (Contacto c : s.getContactosCompartidos()) {
+        String telefonoIncoming = c.getTelefono();
+
+        // 2. Verificar duplicado usando el Map
+        if (!contactosActualesPorTelefono.containsKey(telefonoIncoming)) {
+            // No es duplicado: se añade
             Contacto copia = new Contacto(c, s.getNombreSolicitante());
+            actuales.add(copia);
+            contactosImportados++;
+        } else {
+            // Es duplicado: obtener el contacto existente
+            Contacto contactoExistente = contactosActualesPorTelefono.get(telefonoIncoming);
             
-            // 2. Verificar duplicado ANTES de añadir (usando el nombre modificado)
-            if (!nombresActuales.contains(copia.getNombre().toLowerCase())) {
-                actuales.add(copia);
-                contactosImportados++;
-            } else {
-                System.out.println("ADVERTENCIA: Contacto '" + copia.getNombre() + "' ya existe en la lista del receptor, se omitirá.");
-            }
+            // 3. Generar el mensaje detallado solicitado por el usuario
+            String mensajeDetalle = String.format(
+                " - Contacto enviado: '%s' | Ya registrado como: '%s' (Teléfono: %s)",
+                c.getNombre(), // Nombre como lo envió el solicitante
+                contactoExistente.getNombre(), // Nombre como lo tiene el receptor (¡Nuevo!)
+                c.getTelefono()
+            );
+            mensajesDuplicados.add(mensajeDetalle);
+        }
+    }
+    
+    // Guardar lista actualizada y solicitud
+    repo.guardarListaContactos(receptor.getNombreUsuario(), actuales, passwordReceptor);
+
+    s.setEstado(SolicitudCompartir.EstadoSolicitud.ACEPTADA);
+    repo.guardarSolicitud(s);
+    
+    // 4. Reportar duplicados lanzando una excepción con el mensaje completo de advertencia
+    if (!mensajesDuplicados.isEmpty()) {
+        StringBuilder mensajeFinal = new StringBuilder();
+        mensajeFinal.append("ADVERTENCIA: Se importaron ").append(contactosImportados).append(" contactos a tu lista.\n");
+        mensajeFinal.append("Los siguientes ").append(mensajesDuplicados.size()).append(" contactos no se importaron porque su número de teléfono ya existe en tu lista:\n");
+        
+        for (String detalle : mensajesDuplicados) {
+            mensajeFinal.append(detalle).append("\n");
         }
         
-        repo.guardarListaContactos(receptor.getNombreUsuario(), actuales, passwordReceptor);
-
-        s.setEstado(SolicitudCompartir.EstadoSolicitud.ACEPTADA);
-        repo.guardarSolicitud(s);
-        
-        System.out.println("Se importaron " + contactosImportados + " contactos.");
-        
-    }
+        throw new Exception(mensajeFinal.toString()); 
+    } 
+}
 
     public List<SolicitudCompartir> verSolicitudesEnviadas(Usuario solicitante) {
         return repo.cargarSolicitudesEnviadas(solicitante.getNombreUsuario());
