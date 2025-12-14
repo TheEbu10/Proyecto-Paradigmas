@@ -239,10 +239,10 @@ public class InterfazUsuario {
         for (int i = 0; i < solicitudes.size(); i++) {
             SolicitudCompartir s = solicitudes.get(i);
             System.out.printf("[%d] ID %s: A %s - Estado: %s\n", 
-                              i + 1, 
-                              s.getIdSolicitud(), 
-                              s.getNombreDestinatario(), 
-                              s.getEstado().getDescripcion());
+                            i + 1, 
+                            s.getIdSolicitud(), 
+                            s.getNombreDestinatario(), 
+                            s.getEstado().getDescripcion());
         }
 
         // Opcionalmente, permitir ver el detalle de la solicitud
