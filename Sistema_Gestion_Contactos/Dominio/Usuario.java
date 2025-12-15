@@ -19,12 +19,12 @@ public class Usuario implements Serializable {
         this.email = (email == null) ? "" : email;
     }
 
-    // Constructor auxiliar para DESERIALIZACIÓN (recibe el hash directamente)
-    // Modificado para incluir email y evitar la generación de hash.
+    // Constructor auxiliar para DESERIALIZACIÓN
+  
     public Usuario(String nombreCompleto, String nombreUsuario, String passwordHash, String email, boolean esParaPersistencia) {
         this.nombreCompleto = nombreCompleto;
         this.nombreUsuario = nombreUsuario;
-        this.passwordHash = passwordHash; // Se asume que esto ya es un hash
+        this.passwordHash = passwordHash; 
         this.email = (email == null) ? "" : email;
     }
     

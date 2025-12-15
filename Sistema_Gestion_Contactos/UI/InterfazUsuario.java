@@ -15,7 +15,7 @@ public class InterfazUsuario {
     private final ServicioContactos servicioContactos = new ServicioContactos();
 
     private Usuario usuarioActual = null; // Almacena el usuario logeado
-    private String passwordActual = null; // Almacena la contraseña (necesaria para cifrado/descifrado)
+    private String passwordActual = null; // Almacena la contraseña 
 
     public void iniciar() {
         int opcion;
@@ -46,12 +46,11 @@ public class InterfazUsuario {
     private void mostrarMenuPrincipal() {
         System.out.println("\n--- Gestor de Contactos ---");
         System.out.println("1. Registrar Usuario");
-        System.out.println("2. Iniciar Sesión (Login)");
+        System.out.println("2. Iniciar Sesión");
         System.out.println("0. Salir");
         System.out.print("Seleccione una opción: ");
     }
     
-    // --- Lógica de Usuario ---
 
     private void registrarUsuario() {
         System.out.println("\n--- REGISTRO ---");
@@ -92,10 +91,10 @@ public class InterfazUsuario {
             System.out.println("\n--- MENÚ DE CONTACTOS (" + usuarioActual.getNombreUsuario() + ") ---");
             System.out.println("1. Registrar Contacto");
             System.out.println("2. Ver Listado de Contactos");
-            System.out.println("3. Compartir Contactos (Enviar Solicitud)");
+            System.out.println("3. Compartir Contactos con Otro Usuario");
             System.out.println("4. Revisar Solicitudes Recibidas");
-            System.out.println("5. Ver Estado de Solicitudes Enviadas"); // Nueva opción
-            System.out.println("0. Cerrar Sesión (Logout)");
+            System.out.println("5. Ver Estado de Solicitudes Enviadas");
+            System.out.println("0. Cerrar Sesión");
             System.out.print("Seleccione una opción: ");
             
             try {
@@ -110,7 +109,7 @@ public class InterfazUsuario {
                         System.out.println("Sesión cerrada.");
                         this.usuarioActual = null;
                         this.passwordActual = null;
-                        return; // Sale del loop y vuelve al menú principal
+                        return; 
                     default: System.out.println("Opción no válida.");
                 }
             } catch (NumberFormatException e) {
@@ -122,7 +121,7 @@ public class InterfazUsuario {
     
     private void registrarContacto() {
         System.out.println("\n--- REGISTRAR CONTACTO ---");
-        // Nombre y teléfono son obligatorios; email y url son opcionales
+        // Nombre y teléfono son obligatorios, email y url son opcionales
         String nombre = leerNoVacio("Nombre del contacto: ");
         String telefono = leerNoVacio("Teléfono: ");
         System.out.print("Correo electrónico (opcional): ");
@@ -133,7 +132,7 @@ public class InterfazUsuario {
         try {
             Contacto nuevoContacto = new Contacto(nombre, telefono, email, url.isEmpty() ? null : url);
             servicioContactos.agregarContacto(usuarioActual, passwordActual, nuevoContacto);
-            System.out.println("Contacto '" + nombre + "' agregado exitosamente.");
+            System.out.println("Contacto '" + nombre + "' agregado exitosamente");
         } catch (Exception e) {
             System.out.println("ERROR al registrar contacto: " + e.getMessage());
         }
@@ -144,7 +143,7 @@ public class InterfazUsuario {
             List<Contacto> contactos = servicioContactos.obtenerContactosOrdenados(usuarioActual, passwordActual);
             
             if (contactos.isEmpty()) {
-                System.out.println("Su lista de contactos está vacía.");
+                System.out.println("Su lista de contactos está vacía");
                 return;
             }
 
@@ -175,7 +174,7 @@ public class InterfazUsuario {
         String nombreReceptor = leerNoVacio("Ingrese el nombre de usuario de la persona a la que desea compartir su lista: ");
         
         if (nombreReceptor.equals(usuarioActual.getNombreUsuario())) {
-            System.out.println("No puede compartir la lista consigo mismo.");
+            System.out.println("No se puede enviar una solicitud al usuario actual");
             return;
         }
         
@@ -226,17 +225,17 @@ public class InterfazUsuario {
             String respuesta = scanner.nextLine().trim().toUpperCase();
 
             if (respuesta.equals("A")) {
-                // Llama al método aceptar (se asume que incluye la lógica de no duplicados)
+                // Llama al método aceptar 
                 servicioContactos.aceptarSolicitud(s.getIdSolicitud(), usuarioActual, passwordActual);
                 System.out.println("Lista de contactos de " + s.getNombreSolicitante() + " importada con éxito");
             } else if (respuesta.equals("R")) {
-                // Llama al nuevo método rechazar
+                // Llama al método rechazar
                 servicioContactos.rechazarSolicitud(s.getIdSolicitud(), usuarioActual);
                 System.out.println("Solicitud de " + s.getNombreSolicitante() + " ha sido rechazada.");
             } else {
                 System.out.println("No se realizó ninguna acción.");
             }
-            // ------------------------------------
+
         } else if (indice != 0) {
             System.out.println("Opción de solicitud no válida.");
         }
@@ -265,7 +264,7 @@ public class InterfazUsuario {
                             s.getEstado().getDescripcion());
         }
 
-        // Opcionalmente, permitir ver el detalle de la solicitud
+        // permite ver el detalle de la solicitud
         System.out.println("\nPresione Enter para continuar");
         scanner.nextLine();
 
@@ -274,7 +273,7 @@ public class InterfazUsuario {
     }
 }
 
-    // Metodo para que el usuario no deje un campo vacio 
+    // metodo para que el usuario no deje un campo vacio 
     private String leerNoVacio(String prompt) {
         String valor;
         do {

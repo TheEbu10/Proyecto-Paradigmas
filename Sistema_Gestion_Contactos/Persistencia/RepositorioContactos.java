@@ -11,14 +11,13 @@ import java.util.stream.Collectors;
 
 public class RepositorioContactos {
 
-    // NUEVAS CONSTANTES DE RUTA
     private static final String DIRECTORIO_DATOS = "Sistema_Gestion_Contactos/Persistencia/Users";
     private static final String EXTENSION_CONTACTOS = ".dat";
     private static final String ARCHIVO_SOLICITUDES_NOMBRE = "solicitudes.ser";
     private static final String ARCHIVO_SOLICITUDES = DIRECTORIO_DATOS + File.separator + ARCHIVO_SOLICITUDES_NOMBRE;
 
 
-    // MÉTODO AUXILIAR PARA ASEGURAR EL DIRECTORIO
+    // metodo para asegurar que el directorio exista
     private void asegurarDirectorio() {
         File directorio = new File(DIRECTORIO_DATOS);
         if (!directorio.exists()) {
@@ -27,26 +26,24 @@ public class RepositorioContactos {
     }
 
     public void guardarListaContactos(String idUsuario, List<Contacto> contactos, String passwordUsuario) throws Exception {
-        // Aseguramos que la carpeta "Datos" exista
         asegurarDirectorio();
         
-        // 1. Derivar la llave AES a partir de la contraseña
+        // Derivar la llave AES a partir de la contraseña
         Key key = UtileriaSeguridad.derivarLlave(passwordUsuario);
 
-        // 2. Serializar la lista de Contactos a bytes
+        // Serializar la lista de Contactos a bytes
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(contactos);
         oos.close();
         
-        // 3. Convertir bytes serializados a Base64 para cifrado
+        // Convertir bytes serializados a Base64 para cifrado
         String datosSerializadosBase64 = Base64.getEncoder().encodeToString(bos.toByteArray());
         
-        // 4. Cifrar la cadena Base64
+        // Cifrar la cadena Base64
         String datosCifrados = CifradorAES.cifrar(datosSerializadosBase64, key);
 
-        // 5. Guardar el resultado cifrado en el archivo del usuario
-        // CAMBIO CRÍTICO: Construir la ruta completa
+        // guardar el resultado cifrado en el archivo del usuario
         String rutaArchivoUsuario = DIRECTORIO_DATOS + File.separator + idUsuario + EXTENSION_CONTACTOS;
         
         try (PrintWriter pw = new PrintWriter(new FileWriter(rutaArchivoUsuario))) {
@@ -54,9 +51,9 @@ public class RepositorioContactos {
         }
     }
 
-
+        // metodo para cargar la lista de contactos de un usuario
     public List<Contacto> cargarListaContactos(String idUsuario, String passwordUsuario) throws Exception {
-        // CAMBIO CRÍTICO: Construir la ruta completa para cargar
+
         String rutaArchivoUsuario = DIRECTORIO_DATOS + File.separator + idUsuario + EXTENSION_CONTACTOS;
         
         File archivo = new File(rutaArchivoUsuario);
@@ -64,20 +61,20 @@ public class RepositorioContactos {
             return new ArrayList<>();
         }
 
-        // 1. Derivar la llave
+        // Derivar la llave 
         Key key = UtileriaSeguridad.derivarLlave(passwordUsuario);
 
-        // 2. Leer los datos cifrados del archivo
+        // Leer los datos cifrados del archivo
         String datosCifrados;
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             datosCifrados = br.readLine();
             if (datosCifrados == null || datosCifrados.isEmpty()) return new ArrayList<>();
         }
         
-        // 3. Descifrar la cadena Base64
+        // Descifrar la cadena Base64
         String datosSerializadosBase64 = CifradorAES.descifrar(datosCifrados, key);
         
-        // 4. Descodificar de Base64 y Deserializar la lista
+        // Descodificar de Base64 y Deserializar la lista
         byte[] datos = Base64.getDecoder().decode(datosSerializadosBase64);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(datos);
             ObjectInputStream ois = new ObjectInputStream(bis)) {
@@ -90,7 +87,6 @@ public class RepositorioContactos {
     
 
     // Las solicitudes se guardarán en un archivo
-    // La constante ARCHIVO_SOLICITUDES ya fue modificada arriba
     
     private List<SolicitudCompartir> cargarTodasSolicitudes() {
         File archivo = new File(ARCHIVO_SOLICITUDES);
@@ -110,7 +106,6 @@ public class RepositorioContactos {
     }
 
     private void guardarTodasSolicitudes(List<SolicitudCompartir> solicitudes) {
-        // Aseguramos que la carpeta "Datos" exista
         asegurarDirectorio();
         
         try (FileOutputStream fos = new FileOutputStream(ARCHIVO_SOLICITUDES);
@@ -121,9 +116,7 @@ public class RepositorioContactos {
         }
     }
     
-    // ... (Resto de los métodos que usan cargar/guardarTodasSolicitudes)
     public void guardarSolicitud(SolicitudCompartir nuevaSolicitud) {
-        // ... (código que llama a cargarTodasSolicitudes y guardarTodasSolicitudes)
         List<SolicitudCompartir> solicitudes = cargarTodasSolicitudes();
         
         int index = -1;

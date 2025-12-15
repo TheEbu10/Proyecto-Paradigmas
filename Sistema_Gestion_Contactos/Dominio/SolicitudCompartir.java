@@ -45,13 +45,32 @@ public class SolicitudCompartir implements Serializable {
         this.contactosCompartidos = contactosCompartidos;
     }
 
-    public String getIdSolicitud() { return idSolicitud; }
-    public String getNombreSolicitante() { return nombreSolicitante; }
-    public String getNombreDestinatario() { return nombreDestinatario; }
-    public Date getFechaSolicitud() { return fechaSolicitud; }
-    public EstadoSolicitud getEstado() { return estado; }
-    public void setEstado(EstadoSolicitud nuevoEstado) { this.estado = nuevoEstado; }
-    public List<Contacto> getContactosCompartidos() { return contactosCompartidos; }
+    public String getIdSolicitud() { 
+        return idSolicitud; 
+    }
+    
+    public String getNombreSolicitante() { 
+        return nombreSolicitante; 
+    }
+    
+    public String getNombreDestinatario() { 
+        return nombreDestinatario; 
+    }
+    
+    public Date getFechaSolicitud() { 
+        return fechaSolicitud; 
+    }
+    
+    public EstadoSolicitud getEstado() { 
+        return estado; 
+    }
+
+    public void setEstado(EstadoSolicitud nuevoEstado) { 
+        this.estado = nuevoEstado; 
+    }
+    public List<Contacto> getContactosCompartidos() { 
+        return contactosCompartidos; 
+    }
 
     @Override
     public String toString() {

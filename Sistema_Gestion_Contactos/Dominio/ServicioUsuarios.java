@@ -12,16 +12,17 @@ public class ServicioUsuarios {
             throw new Exception("El nombre de usuario ya existe");
         }
         
-        // 2. Verificar unicidad de Correo Electrónico
+        // Verificar si el email ya está en uso
         if (repo.buscarPorEmail(email) != null) {
             throw new Exception("El correo electrónico en uso");
         }
         
-        // Si ambas verificaciones pasan, se procede al registro
+        // Si ambas verificaciones pasan, se se crea y guarda el usuario
         Usuario u = new Usuario(nombreCompleto, nombreUsuario, password, email);
         repo.guardar(u);
     }
 
+    // metodo para autenticar usuario
     public Usuario autenticar(String nombreUsuario, String password) throws Exception {
         Usuario u = repo.buscarPorNombreUsuario(nombreUsuario);
         if (u == null) throw new Exception("Usuario no encontrado");

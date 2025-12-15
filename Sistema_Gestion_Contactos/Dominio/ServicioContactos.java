@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 public class ServicioContactos {
 
     private final RepositorioContactos repo = new RepositorioContactos();
-    private final ServicioUsuarios servicioUsuarios = new ServicioUsuarios();
 
     public void agregarContacto(Usuario usuario, String passwordUsuario, Contacto nuevo) throws Exception {
         List<Contacto> lista = repo.cargarListaContactos(usuario.getNombreUsuario(), passwordUsuario);
@@ -26,7 +25,7 @@ public class ServicioContactos {
 
     public void solicitarCompartir(Usuario solicitante, String passwordSolicitante, String nombreReceptor) throws Exception {
         List<Contacto> contactosSolicitante = repo.cargarListaContactos(solicitante.getNombreUsuario(), passwordSolicitante);
-        // Guardaremos la lista dentro de la Solicitud (no cifrada en este prototipo)
+        // Guardaremos la lista dentro de la Solicitud de Compartir
         SolicitudCompartir solicitud = new SolicitudCompartir(solicitante.getNombreUsuario(), nombreReceptor, new ArrayList<>(contactosSolicitante));
         repo.guardarSolicitud(solicitud);
     }
@@ -43,7 +42,7 @@ public class ServicioContactos {
 
     List<Contacto> actuales = repo.cargarListaContactos(receptor.getNombreUsuario(), passwordReceptor);
     
-    // 1. Crear un Map donde la clave es el teléfono y el valor es el objeto Contacto existente.
+    // Crea un Map donde la clave es el teléfono y el valor es el objeto Contacto existente
     Map<String, Contacto> contactosActualesPorTelefono = actuales.stream()
         .collect(Collectors.toMap(Contacto::getTelefono, c -> c));
         
@@ -53,21 +52,21 @@ public class ServicioContactos {
     for (Contacto c : s.getContactosCompartidos()) {
         String telefonoIncoming = c.getTelefono();
 
-        // 2. Verificar duplicado usando el Map
+        // Verificar duplicado usando el Map
         if (!contactosActualesPorTelefono.containsKey(telefonoIncoming)) {
-            // No es duplicado: se añade
+            // si no es un diplicado se añade
             Contacto copia = new Contacto(c, s.getNombreSolicitante());
             actuales.add(copia);
             contactosImportados++;
         } else {
-            // Es duplicado: obtener el contacto existente
+            // si es un duplicado obtenemos los detalles
             Contacto contactoExistente = contactosActualesPorTelefono.get(telefonoIncoming);
             
-            // 3. Generar el mensaje detallado solicitado por el usuario
+            // Generar el mensaje detallado solicitado por el usuario
             String mensajeDetalle = String.format(
                 " - Contacto enviado: '%s' | Ya registrado como: '%s' (Teléfono: %s)",
                 c.getNombre(), // Nombre como lo envió el solicitante
-                contactoExistente.getNombre(), // Nombre como lo tiene el receptor (¡Nuevo!)
+                contactoExistente.getNombre(), // Nombre como lo tiene el receptor
                 c.getTelefono()
             );
             mensajesDuplicados.add(mensajeDetalle);
@@ -80,7 +79,7 @@ public class ServicioContactos {
     s.setEstado(SolicitudCompartir.EstadoSolicitud.ACEPTADA);
     repo.guardarSolicitud(s);
     
-    // 4. Reportar duplicados lanzando una excepción con el mensaje completo de advertencia
+    // 4. Reportar duplicados lanzando una excepción con el mensaje de advertencia
     if (!mensajesDuplicados.isEmpty()) {
         StringBuilder mensajeFinal = new StringBuilder();
         mensajeFinal.append("ADVERTENCIA: Se importaron ").append(contactosImportados).append(" contactos a tu lista.\n");
@@ -113,10 +112,10 @@ public class ServicioContactos {
         throw new Exception("Solicitud enviada: estado actual " + s.getEstado().getDescripcion());
     }
 
-    // 1. Cambiar el estado a RECHAZADA
+    // Cambiar el estado a RECHAZADA
     s.setEstado(SolicitudCompartir.EstadoSolicitud.RECHAZADA);
     
-    // 2. Guardar la solicitud actualizada en el repositorio
+    // Guardar la solicitud actualizada en el repositorio
     repo.guardarSolicitud(s); 
     }
 }

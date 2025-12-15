@@ -51,7 +51,7 @@ public class RepositorioUsuarios {
                 return u;
             }
         }
-        return null; //No fue encontrado el usuario
+        return null;
     }
 
     private List<Usuario> cargarTodos() {
@@ -96,11 +96,11 @@ public class RepositorioUsuarios {
         List<Usuario> listaCifrada = new ArrayList<>();
         try {
             for (Usuario u : usuarios) {
-                // El constructor de deserialización que creamos en el paso 1 es perfecto para esto
+               
                 Usuario copiaCifrada = new Usuario(
                     CifradorAES.cifrar(u.getNombreCompleto(), LLAVE_SISTEMA),
                     u.getNombreUsuario(), // nombreUsuario no se cifra, es el ID de búsqueda
-                    u.getPasswordhash(), // passwordHash no se cifra (ya es un hash)
+                    u.getPasswordhash(), // passwordHash no se cifra
                     CifradorAES.cifrar(u.getEmail(), LLAVE_SISTEMA),
                     true // Indica que se está usando el constructor de persistencia
                 );
@@ -112,7 +112,7 @@ public class RepositorioUsuarios {
         return listaCifrada;
     }
 
-    /** Descifra los campos sensibles (nombreCompleto, email) de una lista de Usuarios. */
+    // Descifra los campos sensibles (nombreCompleto, email) de una lista de Usuarios
     private List<Usuario> descifrarLista(List<Usuario> usuariosCifrados) {
         List<Usuario> listaDescifrada = new ArrayList<>();
         try {
@@ -127,14 +127,14 @@ public class RepositorioUsuarios {
                     u.getNombreUsuario(),
                     u.getPasswordhash(),
                     emailDescifrado,
-                    true // Indica que se está usando el constructor de persistencia
+                    true 
                 );
                 listaDescifrada.add(usuarioDescifrado);
             }
         } catch (Exception e) {
             // Un error al descifrar significa que el archivo está corrupto o la clave es incorrecta
             System.err.println("ERROR al descifrar datos de usuario: El archivo podría estar corrupto o la clave secreta cambió. " + e.getMessage());
-            return new ArrayList<>(); // Devuelve lista vacía para evitar errores
+            return new ArrayList<>();
         }
         return listaDescifrada;
     }
