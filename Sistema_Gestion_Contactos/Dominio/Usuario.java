@@ -20,7 +20,7 @@ public class Usuario implements Serializable {
     }
 
     // Constructor auxiliar para DESERIALIZACIÓN (recibe el hash directamente)
-    // **Modificado para incluir email y evitar la generación de hash.**
+    // Modificado para incluir email y evitar la generación de hash.
     public Usuario(String nombreCompleto, String nombreUsuario, String passwordHash, String email, boolean esParaPersistencia) {
         this.nombreCompleto = nombreCompleto;
         this.nombreUsuario = nombreUsuario;
@@ -43,11 +43,6 @@ public class Usuario implements Serializable {
     public String getEmail() {
         return email;
     }
-
-    /*//Validar contraseña
-    public boolean validarpassword(String passwordIngresada) {
-        return UtileriaSeguridad.validarHash(passwordIngresada, this.passwordHash);
-    }*/
 
     @Override
     public String toString() {
