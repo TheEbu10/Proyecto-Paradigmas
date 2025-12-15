@@ -178,6 +178,11 @@ public class InterfazUsuario {
             System.out.println("No puede compartir la lista consigo mismo.");
             return;
         }
+        
+        if (servicioUsuarios.buscarUsuarioPorNombre(nombreReceptor) == null) {
+            System.out.println("El usuario '" + nombreReceptor + "' no existe.");
+            return;
+        }
 
         try {
             servicioContactos.solicitarCompartir(usuarioActual, passwordActual, nombreReceptor);

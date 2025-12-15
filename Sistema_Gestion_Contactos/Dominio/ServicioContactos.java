@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ServicioContactos {
 
     private final RepositorioContactos repo = new RepositorioContactos();
+    private final ServicioUsuarios servicioUsuarios = new ServicioUsuarios();
 
     public void agregarContacto(Usuario usuario, String passwordUsuario, Contacto nuevo) throws Exception {
         List<Contacto> lista = repo.cargarListaContactos(usuario.getNombreUsuario(), passwordUsuario);

@@ -30,5 +30,7 @@ public class ServicioUsuarios {
         return u;
     }
 
-    
+    public Usuario buscarUsuarioPorNombre(String nombreUsuario) {
+        return repo.buscarPorNombreUsuario(nombreUsuario);
+    }
 }
