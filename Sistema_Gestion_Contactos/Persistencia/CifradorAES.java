@@ -1,51 +1,38 @@
 package Persistencia;
 
 import javax.crypto.Cipher;
-import javax.crypto.spec.GCMParameterSpec;
 import java.security.Key;
-import java.security.SecureRandom;
 import java.util.Base64;
-import java.nio.charset.StandardCharsets;
 
 public class CifradorAES {
-
-    private static final String ALGORITMO = "AES/GCM/NoPadding";
-    private static final int IV_LENGTH_BYTES = 12; // 96 bits, recomendado para GCM
-    private static final int TAG_LENGTH_BITS = 128;
+    
+    private static final String ALGORITMO = "AES";
 
     public static String cifrar(String datos, Key llave) throws Exception {
+        // Inicializa el objeto Cipher con el algoritmo AES
         Cipher cipher = Cipher.getInstance(ALGORITMO);
-
-        byte[] iv = new byte[IV_LENGTH_BYTES];
-        SecureRandom rnd = new SecureRandom();
-        rnd.nextBytes(iv);
-
-        GCMParameterSpec spec = new GCMParameterSpec(TAG_LENGTH_BITS, iv);
-        cipher.init(Cipher.ENCRYPT_MODE, llave, spec);
-
-        byte[] datosCifrados = cipher.doFinal(datos.getBytes(StandardCharsets.UTF_8));
-
-        // Devuelve IV y ciphertext juntos, codificados en Base64 separados por ':'
-        String ivB64 = Base64.getEncoder().encodeToString(iv);
-        String ctB64 = Base64.getEncoder().encodeToString(datosCifrados);
-        return ivB64 + ":" + ctB64;
+        // Configura el Cipher en modo ENCRYPT con la llave
+        cipher.init(Cipher.ENCRYPT_MODE, llave);
+        
+        // Cifra los bytes de la cadena de entrada
+        byte[] datosCifrados = cipher.doFinal(datos.getBytes());
+        
+        // Codifica el resultado binario cifrado a Base64 para que pueda ser guardado en un archivo de texto
+        return Base64.getEncoder().encodeToString(datosCifrados);
     }
-
-    public static String descifrar(String paqueteBase64, Key llave) throws Exception {
-        // paquete tiene formato ivBase64:ciphertextBase64
-        if (paqueteBase64 == null || !paqueteBase64.contains(":")) {
-            throw new IllegalArgumentException("Formato de datos cifrados inválido");
-        }
-
-        String[] partes = paqueteBase64.split(":", 2);
-        byte[] iv = Base64.getDecoder().decode(partes[0]);
-        byte[] ct = Base64.getDecoder().decode(partes[1]);
-
+    public static String descifrar(String datosCifradosBase64, Key llave) throws Exception {
+        // Inicializa el objeto Cipher con el algoritmo AES
         Cipher cipher = Cipher.getInstance(ALGORITMO);
-        GCMParameterSpec spec = new GCMParameterSpec(TAG_LENGTH_BITS, iv);
-        cipher.init(Cipher.DECRYPT_MODE, llave, spec);
-
-        byte[] datosDescifrados = cipher.doFinal(ct);
-        return new String(datosDescifrados, StandardCharsets.UTF_8);
+        // Configura el Cipher en modo DECRYPT con la llave
+        cipher.init(Cipher.DECRYPT_MODE, llave);
+        
+        // Primero, decodifica la cadena Base64 a bytes binarios cifrados
+        byte[] datosDecodificados = Base64.getDecoder().decode(datosCifradosBase64);
+        
+        // Descifra los bytes
+        byte[] datosDescifrados = cipher.doFinal(datosDecodificados);
+        
+        // Convierte los bytes descifrados de nuevo a una cadena de texto
+        return new String(datosDescifrados);
     }
 }

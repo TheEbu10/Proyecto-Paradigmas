@@ -97,28 +97,13 @@ public class RepositorioContactos {
         if (!archivo.exists() || archivo.length() == 0) {
             return new ArrayList<>();
         }
-        try {
-            // Leer texto cifrado del archivo
-            String datosCifrados;
-            try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
-                datosCifrados = br.readLine();
-                if (datosCifrados == null || datosCifrados.isEmpty()) return new ArrayList<>();
-            }
+        try (FileInputStream fis = new FileInputStream(archivo);
+            ObjectInputStream ois = new ObjectInputStream(fis)) {
             
-            // Derivar llave maestra y descifrar
-            Key masterKey = UtileriaSeguridad.derivarLlaveMaestra();
-            String datosSerializadosBase64 = CifradorAES.descifrar(datosCifrados, masterKey);
-            
-            // Deserializar
-            byte[] datos = Base64.getDecoder().decode(datosSerializadosBase64);
-            try (ByteArrayInputStream bis = new ByteArrayInputStream(datos);
-                ObjectInputStream ois = new ObjectInputStream(bis)) {
-                
-                @SuppressWarnings("unchecked")
-                List<SolicitudCompartir> solicitudes = (List<SolicitudCompartir>) ois.readObject();
-                return solicitudes;
-            }
-        } catch (Exception e) {
+            @SuppressWarnings("unchecked")
+            List<SolicitudCompartir> solicitudes = (List<SolicitudCompartir>) ois.readObject();
+            return solicitudes;
+        } catch (IOException | ClassNotFoundException e) {
             System.err.println("Error al cargar solicitudes: " + e.getMessage());
             return new ArrayList<>();
         }
@@ -127,23 +112,11 @@ public class RepositorioContactos {
     private void guardarTodasSolicitudes(List<SolicitudCompartir> solicitudes) {
         // Aseguramos que la carpeta "Datos" exista
         asegurarDirectorio();
-        try {
-            // Serializar a bytes y codificar en Base64
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
-                oos.writeObject(solicitudes);
-            }
-            String datosSerializadosBase64 = Base64.getEncoder().encodeToString(bos.toByteArray());
-            
-            // Derivar llave maestra y cifrar
-            Key masterKey = UtileriaSeguridad.derivarLlaveMaestra();
-            String datosCifrados = CifradorAES.cifrar(datosSerializadosBase64, masterKey);
-            
-            // Guardar en archivo como texto cifrado
-            try (PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_SOLICITUDES))) {
-                pw.println(datosCifrados);
-            }
-        } catch (Exception e) {
+        
+        try (FileOutputStream fos = new FileOutputStream(ARCHIVO_SOLICITUDES);
+            ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(solicitudes);
+        } catch (IOException e) {
             System.err.println("Error al guardar solicitudes: " + e.getMessage());
         }
     }

@@ -35,13 +35,4 @@ public class UtileriaSeguridad {
             throw new RuntimeException("Error al derivar llave.", e);
         }
     }
-
-    // Deriva la llave maestra para cifrar datos globales (leer desde variable de entorno)
-    public static Key derivarLlaveMaestra() {
-        String master = System.getenv("SGC_MASTER_PASSWORD");
-        if (master == null || master.isEmpty()) {
-            throw new RuntimeException("La variable de entorno SGC_MASTER_PASSWORD no está definida. Defínela para habilitar cifrado de datos globales.");
-        }
-        return derivarLlave(master);
-    }
 }
