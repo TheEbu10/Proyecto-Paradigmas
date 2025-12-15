@@ -55,7 +55,7 @@ public class RepositorioUsuarios {
     }
 
     private List<Usuario> cargarTodos() {
-       File archivo = new File(RUTA_COMPLETA);
+        File archivo = new File(RUTA_COMPLETA);
 
         if (!archivo.exists()) {
             return new ArrayList<>();
