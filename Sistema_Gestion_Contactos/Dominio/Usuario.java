@@ -11,18 +11,21 @@ public class Usuario implements Serializable {
     private String passwordHash;
     private String email;
 //Constructores
-    public Usuario(String nombreCompleto, String nombreUsuario, String passwordIngresada, String email) {
+   public Usuario(String nombreCompleto, String nombreUsuario, String passwordIngresada, String email) {
         this.nombreCompleto = nombreCompleto;
         this.nombreUsuario = nombreUsuario;
+        // La contraseña se hashea aquí
         this.passwordHash = UtileriaSeguridad.generarHash(passwordIngresada);
         this.email = (email == null) ? "" : email;
     }
-// Constructor auxiliar
-    public Usuario(String nombreCompleto, String nombreUsuario, String passwordHash) {
+
+    // Constructor auxiliar para DESERIALIZACIÓN (recibe el hash directamente)
+    // **Modificado para incluir email y evitar la generación de hash.**
+    public Usuario(String nombreCompleto, String nombreUsuario, String passwordHash, String email, boolean esParaPersistencia) {
         this.nombreCompleto = nombreCompleto;
         this.nombreUsuario = nombreUsuario;
-        this.passwordHash = passwordHash;
-        this.email = "";
+        this.passwordHash = passwordHash; // Se asume que esto ya es un hash
+        this.email = (email == null) ? "" : email;
     }
     
     public String getNombreUsuario() {
