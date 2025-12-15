@@ -1,84 +1,106 @@
-@startuml Clases
-' Paquetes
-package dominio {
+@startuml
+package Dominio {
+    
     class Usuario {
-        - nombreCompleto : String
-        - nombreUsuario : String
-        - passwordHash : String
-        - email : String
-        + getNombreUsuario()
-        + getPasswordHash()
-        + validarPassword(password) : boolean
+        - String nombreCompleto
+        - String nombreUsuario
+        - String passwordHash
+        - String email
+        + Usuario(nombreCompleto, nombreUsuario, password, email)
+        + getNombreUsuario(): String
+        + getPasswordhash(): String
     }
-
+    
     class Contacto {
-        - nombre : String
-        - telefono : String
-        - email : String
-        - urlPaginaPersonal : String
-        - origenImportacion : String
-        + getNombre()
-        + toString()
+        - String nombre
+        - String telefono
+        - String email
+        - String urlPaginaPersonal
+        - String origenImportacion
+        + Contacto(...)
+        + getNombre(): String
     }
-
+    
     class SolicitudCompartir {
-        - idEmisor : String
-        - idReceptor : String
-        - fechaSolicitud : Date
-        - estado : String
+        <<enum>> EstadoSolicitud
+        - String idSolicitud
+        - String nombreSolicitante
+        - String nombreDestinatario
+        - EstadoSolicitud estado
+        - List<Contacto> contactosCompartidos
+        + SolicitudCompartir(...)
+        + setEstado(EstadoSolicitud)
+    }
+    
+    class ServicioUsuarios {
+        - RepositorioUsuarios repo
+        + registrarUsuario(...)
+        + autenticar(nombreUsuario, password): Usuario
+    }
+    
+    class ServicioContactos {
+        - RepositorioContactos repo
+        + agregarContacto(...)
+        + solicitarCompartir(...)
+        + aceptarSolicitud(...)
     }
 }
 
-package persistencia {
+package Persistencia {
+    
     class RepositorioUsuarios {
-        + guardar(usuario)
-        + buscarPorNombreUsuario(nombreUsuario) : Usuario
+        - static final Key LLAVE_SISTEMA
+        + guardar(Usuario)
+        + buscarPorNombreUsuario(String): Usuario
     }
-
+    
     class RepositorioContactos {
-        + guardar(contacto, idUsuario)
-        + cargarListaContactos(idUsuario) : List<Contacto>
-        + guardarSolicitud(solicitud)
-        + cargarSolicitudesPendientes(idUsuario) : List<SolicitudCompartir>
+        + guardarListaContactos(...)
+        + cargarListaContactos(...)
+        + guardarSolicitud(SolicitudCompartir)
     }
-
+    
     class CifradorAES {
-        + cifrar(texto, llave) : byte[]
-        + descifrar(datos, llave) : String
+        {static} + cifrar(datos, llave): String
+        {static} + descifrar(datosCifrados, llave): String
     }
-
+    
     class UtileriaSeguridad {
-        + generarHash(password) : String
-        + validarHash(password, hash) : boolean
-        + derivarLlave(password, sal) : byte[]
+        {static} + generarHash(passwordPlano): String
+        {static} + validarHash(passwordPlano, passwordHash): boolean
+        {static} + derivarLlave(clave): Key
     }
-
-    RepositorioUsuarios ..> UtileriaSeguridad 
-    RepositorioContactos ..> CifradorAES
 }
 
 package UI {
-    class InterfazUsuarioCLI {
+    class InterfazUsuario {
+        - Scanner scanner
+        - ServicioUsuarios servicioUsuarios
+        - ServicioContactos servicioContactos
+        - Usuario usuarioActual
+        - String passwordActual
         + iniciar()
-        - mostrarMenuPrincipal()
-        - registrarUsuario()
-        - login()
-        - gestionarContactos()
+        + login()
     }
 }
 
-' Relaciones de Clases
-Usuario "1" -- "*" Contacto : lista
-Usuario "1" --> "*" SolicitudCompartir : emisor
-Usuario "1" --> "*" SolicitudCompartir : receptor
-InterfazUsuarioCLI --> Usuario
 
-' Relaciones de Implementación y Asociación
-RepositorioUsuarios ..> Usuario
-RepositorioContactos ..> Contacto
-RepositorioContactos ..> SolicitudCompartir
+SolicitudCompartir *-- Contacto 
 
-CifradorAES <.. RepositorioContactos 
-UtileriaSeguridad <.. RepositorioUsuarios 
+ServicioUsuarios o--> RepositorioUsuarios 
+ServicioContactos o--> RepositorioContactos 
 
-@endumld
+Usuario .up.> UtileriaSeguridad 
+ServicioUsuarios .up.> UtileriaSeguridad 
+RepositorioUsuarios .up.> UtileriaSeguridad 
+RepositorioContactos .up.> UtileriaSeguridad 
+
+RepositorioUsuarios .up.> CifradorAES 
+RepositorioContactos .up.> CifradorAES 
+
+InterfazUsuario o--> ServicioUsuarios 
+InterfazUsuario o--> ServicioContactos 
+InterfazUsuario .up.> Usuario
+
+RepositorioContactos .up.> SolicitudCompartir
+@enduml
